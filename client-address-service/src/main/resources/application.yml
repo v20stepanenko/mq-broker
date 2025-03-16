@@ -1,0 +1,17 @@
+server:
+  port: 8083
+
+spring:
+  artemis:
+    mode: native
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+  jms:
+    template:
+      default-destination: ${jms.queue.getDestination}
+
+jms:
+  queue:
+    getDestination: client.update_address.queue
+    putDestination: client.update_contacts.queue

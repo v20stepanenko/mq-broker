@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  activemq:
+    image: vromero/activemq-artemis
+    container_name: activemq
+    restart: always
+    environment:
+      - ARTEMIS_USERNAME=admin
+      - ARTEMIS_PASSWORD=admin
+      - ENABLE_JMX_EXPORTER=true  # Вмикає Jolokia API
+    ports:
+      - "8161:8161"   # Web UI
+      - "61616:61616" # JMS брокер
+    volumes:
+      - ./activemq-config/activemq.xml:/var/lib/artemis-instance/etc/broker.xml

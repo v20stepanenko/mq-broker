@@ -1,0 +1,42 @@
+# Maven
+**/target/
+**/pom.xml.tag
+**/pom.xml.releaseBackup
+**/pom.xml.next
+**/release.properties
+**/dependency-reduced-pom.xml
+**/buildNumber
+**/.mvn/timing.properties
+**/.mvn/wrapper/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Logs
+logs/
+*.log
+**/nohup.out
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# ActiveMQ
+activemq-data/
+
+# SQLite
+*.db
+*.sqlite
+
+# Docker
+**/docker-compose.override.yml
+**/docker-compose.yml~
+**/.docker/
+
+# Misc
+*.swp
+*.swo
+*.bak
