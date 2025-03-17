@@ -1,0 +1,11 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/client/1/cards"
+  },
+  "response": {
+    "status": 200,
+    "headers": {"Content-Type": "application/json"},
+    "body": "[{\"card_number\": \"448439497018943228\", \"expiry_date\": \"2027-11-30\", \"card_type\": \"MASTERCARD\"}, {\"card_number\": \"444946205104121556\", \"expiry_date\": \"2027-12-09\", \"card_type\": \"VISA\"}]"
+  }
+}

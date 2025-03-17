@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/client2/.*?/contacts"
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{ \"error\": \"Client_not_found\", \"message\": \"The requested client ID does not exist\" }"
+  }
+}

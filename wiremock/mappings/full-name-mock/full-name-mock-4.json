@@ -1,0 +1,11 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/client/4/full-name"
+  },
+  "response": {
+    "status": 200,
+    "headers": {"Content-Type": "application/json"},
+    "body": "{ \"clientId\": \"4\", \"firstName\": \"Ірина\", \"secondName\": \"Іванов\" }"
+  }
+}

@@ -1,0 +1,74 @@
+{
+	"info": {
+		"_postman_id": "15ac4758-4c06-4fb9-9389-bb021e4cb28c",
+		"name": "MQ-Broker Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19129166"
+	},
+	"item": [
+		{
+			"name": "01. Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "sid",
+						"value": "valid-sid"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"success\": true }"
+				},
+				"url": {
+					"raw": "http://localhost:8081/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "02. Send Client Request",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "sid",
+						"value": "valid-sid"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"clientId\": \"2\" }"
+				},
+				"url": {
+					"raw": "http://localhost:8081/client-collect-info",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"client-collect-info"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

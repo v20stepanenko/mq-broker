@@ -1,0 +1,118 @@
+openapi: 3.0.1
+info:
+  title: WireMock Client API
+  version: 1.0.0
+paths:
+  /client/{clientId}/full-name:
+    get:
+      summary: Get full name of client
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Full name of the client
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FullNameResponse"
+        "404":
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /client/{clientId}/contacts:
+    get:
+      summary: Get client contacts
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Contacts of the client
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contact"
+        "404":
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /client/{clientId}/cards:
+    get:
+      summary: Get client cards
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Cards of the client
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Card"
+        "404":
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    FullNameResponse:
+      type: object
+      properties:
+        clientId:
+          type: string
+        firstName:
+          type: string
+        secondName:
+          type: string
+
+    Contact:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [PHONE, EMAIL]
+        value:
+          type: string
+
+    Card:
+      type: object
+      properties:
+        card_number:
+          type: string
+        expiry_date:
+          type: string
+          format: date
+        card_type:
+          type: string
+          enum: [VISA, MASTERCARD]
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string

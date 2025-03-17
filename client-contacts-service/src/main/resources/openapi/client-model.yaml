@@ -1,0 +1,75 @@
+openapi: 3.0.1
+info:
+  title: Client Processing API
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    ClientData:
+      type: object
+      properties:
+        clientId:
+          type: string
+          example: "12345"
+          description: "Unique identifier for the client"
+        firstName:
+          type: string
+          example: "Іван"
+        secondName:
+          type: string
+          example: "Іванович"
+        cards:
+          type: array
+          items:
+            $ref: "#/components/schemas/Card"
+          description: "List of payment cards associated with the client"
+        contacts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Contact"
+          description: "List of contact information for the client"
+      required:
+        - clientId
+
+    Contact:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - PHONE
+            - EMAIL
+            - SOCIAL_MEDIA
+          description: "Type of contact information"
+          example: "PHONE"
+        value:
+          type: string
+          example: "+380123456789"
+          description: "The actual contact value"
+      required:
+        - type
+        - value
+
+    Card:
+      type: object
+      properties:
+        cardNumber:
+          type: string
+          example: "4111111111111111"
+          description: "The client's card number (masked for security)"
+        expiryDate:
+          type: string
+          format: date
+          example: "2026-12"
+          description: "Expiration date of the card (YYYY-MM format)"
+        cardType:
+          type: string
+          enum:
+            - VISA
+            - MASTERCARD
+          description: "Type of the payment card"
+          example: "VISA"
+      required:
+        - cardNumber
+        - expiryDate
+        - cardType

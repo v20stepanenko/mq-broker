@@ -2,15 +2,164 @@ version: '3.8'
 
 services:
   activemq:
-    image: vromero/activemq-artemis
+    image: apache/activemq-classic:6.1.6
     container_name: activemq
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "--user", "admin:admin", "http://activemq:8161/api/jolokia"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - .env
     environment:
-      - ARTEMIS_USERNAME=admin
-      - ARTEMIS_PASSWORD=admin
-      - ENABLE_JMX_EXPORTER=true  # Вмикає Jolokia API
+      ACTIVEMQ_USER: admin
+      ACTIVEMQ_PASSWORD: admin
+      ENABLE_JMX_EXPORTER: "true"
     ports:
-      - "8161:8161"   # Web UI
-      - "61616:61616" # JMS брокер
+      - "8161:8161"
+      - "61616:61616"
     volumes:
-      - ./activemq-config/activemq.xml:/var/lib/artemis-instance/etc/broker.xml
+      - ./activemq-config/broker-00.xml:/opt/apache-activemq/conf/activemq.xml
+  redis:
+    image: redis:7.4.2
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-h", "redis", "ping"]
+      start_period: 5s
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  wiremock:
+    image: wiremock/wiremock:2.35.0
+    container_name: wiremock
+    restart: always
+    ports:
+      - "8090:8080"
+    volumes:
+      - ./wiremock:/home/wiremock
+    command: --verbose --global-response-templating --root-dir /home/wiremock
+
+  postgres:
+    image: postgres:16.1
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U client -d client_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - .env
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./client-storage-service/src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # Client Gateway Service
+  client-gateway-service:
+    build:
+      context: ./client-gateway-service
+      dockerfile: Dockerfile
+    container_name: client-gateway-service
+    depends_on:
+      activemq:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      - SPRING_JMS_BROKER_URL=tcp://activemq:61616
+      - SPRING_ACTIVEMQ_USER=${SPRING_ACTIVEMQ_USER}
+      - SPRING_ACTIVEMQ_PASSWORD=${SPRING_ACTIVEMQ_PASSWORD}
+    ports:
+      - "8081:8081"
+
+  client-full-name-service:
+    build:
+      context: ./client-full-name-service
+      dockerfile: Dockerfile
+    container_name: client-full-name-service
+    env_file:
+      - .env
+    environment:
+      - SPRING_JMS_BROKER_URL=tcp://activemq:61616
+      - SPRING_ACTIVEMQ_USER=${SPRING_ACTIVEMQ_USER}
+      - SPRING_ACTIVEMQ_PASSWORD=${SPRING_ACTIVEMQ_PASSWORD}
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - WIREMOCK_URL=http://wiremock:8080
+    depends_on:
+      activemq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+
+  client-contacts-service:
+    build:
+      context: ./client-contacts-service
+      dockerfile: Dockerfile
+    container_name: client-contacts-service
+    env_file:
+      - .env
+    environment:
+      - SPRING_JMS_BROKER_URL=tcp://activemq:61616
+      - SPRING_ACTIVEMQ_USER=${SPRING_ACTIVEMQ_USER}
+      - SPRING_ACTIVEMQ_PASSWORD=${SPRING_ACTIVEMQ_PASSWORD}
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - WIREMOCK_URL=http://wiremock:8080
+    depends_on:
+      activemq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8083:8083"
+
+  client-cards-service:
+    build:
+      context: ./client-cards-service
+      dockerfile: Dockerfile
+    container_name: client-cards-service
+    env_file:
+      - .env
+    environment:
+      - SPRING_JMS_BROKER_URL=tcp://activemq:61616
+      - SPRING_ACTIVEMQ_USER=${SPRING_ACTIVEMQ_USER}
+      - SPRING_ACTIVEMQ_PASSWORD=${SPRING_ACTIVEMQ_PASSWORD}
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - WIREMOCK_URL=http://wiremock:8080
+    depends_on:
+      activemq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8084:8084"
+
+  client-storage-service:
+    build:
+      context: ./client-storage-service
+      dockerfile: Dockerfile
+    container_name: client-storage-service
+    env_file:
+      - .env
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/client_db?currentSchema=client_info
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SPRING_JMS_BROKER_URL=tcp://activemq:61616
+      - SPRING_ACTIVEMQ_USER=${SPRING_ACTIVEMQ_USER}
+      - SPRING_ACTIVEMQ_PASSWORD=${SPRING_ACTIVEMQ_PASSWORD}
+    depends_on:
+      activemq:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8085:8085"

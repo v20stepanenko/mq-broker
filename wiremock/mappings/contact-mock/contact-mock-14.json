@@ -1,0 +1,11 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/client/14/contacts"
+  },
+  "response": {
+    "status": 200,
+    "headers": {"Content-Type": "application/json"},
+    "body": "[{\"type\": \"PHONE\", \"value\": \"+380506844328\"}, {\"type\": \"EMAIL\", \"value\": \"svitlana.hrytsenko@example.com\"}]"
+  }
+}
