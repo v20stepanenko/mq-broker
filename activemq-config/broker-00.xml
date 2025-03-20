@@ -96,29 +96,29 @@
             </systemUsage>
         </systemUsage>
         <plugins>
-            <simpleAuthenticationPlugin>
-                <users>
-                    <authenticationUser username="client-processing" password="securepassword" groups="client-processing"/>
-                </users>
-            </simpleAuthenticationPlugin>
+<!--            <simpleAuthenticationPlugin>-->
+<!--                <users>-->
+<!--                    <authenticationUser username="client-processing" password="securepassword" groups="client-processing"/>-->
+<!--                </users>-->
+<!--            </simpleAuthenticationPlugin>-->
 
-            <authorizationPlugin>
-                <map>
-                    <authorizationMap>
-                        <authorizationEntries>
-                            <authorizationEntry queue="client.processing.queue" read="client-processing"
-                                                write="client-processing" admin="client-processing"/>
+<!--            <authorizationPlugin>-->
+<!--                <map>-->
+<!--                    <authorizationMap>-->
+<!--                        <authorizationEntries>-->
+<!--                            <authorizationEntry queue="client.processing.queue" read="client-processing"-->
+<!--                                                write="client-processing" admin="client-processing"/>-->
 
-                            <authorizationEntry topic="ActiveMQ.Advisory.>" read="*" write="*" admin="*"/>
-                        </authorizationEntries>
+<!--                            <authorizationEntry topic="ActiveMQ.Advisory.>" read="*" write="*" admin="*"/>-->
+<!--                        </authorizationEntries>-->
 
-                        <tempDestinationAuthorizationEntry>
-                            <tempDestinationAuthorizationEntry read="client-processing" write="client-processing"
-                                                               admin="client-processing"/>
-                        </tempDestinationAuthorizationEntry>
-                    </authorizationMap>
-                </map>
-            </authorizationPlugin>
+<!--                        <tempDestinationAuthorizationEntry>-->
+<!--                            <tempDestinationAuthorizationEntry read="client-processing" write="client-processing"-->
+<!--                                                               admin="client-processing"/>-->
+<!--                        </tempDestinationAuthorizationEntry>-->
+<!--                    </authorizationMap>-->
+<!--                </map>-->
+<!--            </authorizationPlugin>-->
         </plugins>
 
 

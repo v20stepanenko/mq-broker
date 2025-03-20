@@ -13,8 +13,8 @@ services:
     env_file:
       - .env
     environment:
-      ACTIVEMQ_USER: admin
-      ACTIVEMQ_PASSWORD: admin
+      ACTIVEMQ_USER: client-processing
+      ACTIVEMQ_PASSWORD: securepassword
       ENABLE_JMX_EXPORTER: "true"
     ports:
       - "8161:8161"
